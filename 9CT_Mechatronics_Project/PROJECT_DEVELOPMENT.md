@@ -26,25 +26,38 @@
     - Expected Outcome: The robot moves up to a block
 2. Block classification
     - Scenario: The robot detects and moves up to a block
-    - Inputs: The colour sensor
-    - Action: 
-    - Expected Outcome: 
+    - Inputs: The colour sensor detects a colour infront
+    - Action: The robot will check if the colour is red or yellow
+    - Expected Outcome: The robot will do an action based on the colour of the block 
 3. Block avoidance
-    - Scenario: 
-    - Inputs: 
-    - Action: 
-    - Expected Outcome: 
+    - Scenario: The colour sensor has deetected that the block infront of the robot is not red or yellow
+    - Inputs: The colour sensor detects a colour that isnt red or yellow
+    - Action: The robot will move back by 5cm then turn left by 90 degrees then move forward by 5cm
+    - Expected Outcome: The robot avoids and goes around the incorrect coloured block 
 4. Block movement
-    - Scenario: 
-    - Inputs: 
-    - Action: 
-    - Expected Outcome: 
+    - Scenario: The colour sensor has detected that the block infront of the robot is red or yellow
+    - Inputs: The colour sensor detects a colour that is red or yellow
+    - Action: The robot will use a mechanism to grab the block infront and take it back to the start
+    - Expected Outcome: The robot will move the correct colour block to the start
 
 ### Test cases
+| Test Case | Input     | Expected Output   |
+|---------- |---------- |----------------   |
+|red/yellow block|Colour sensor finds a red/yellow block|The robot will use a mechanism to take the block to the start|
+|non red/yellow block|Colour sensor finds a non red/yellow block|The robot will move back by 5cm, turn left by 90 degrees, and move forward by 5cm|
+|block found|The ultrasonic sensor finds a block near infront of the robot|The robot will move forward until the ultrasonic sensor detects that the block is within 1cm|
+|avoiding leaving the designated area|The colour sensor detects the colour black|The robot will move rotate until it no longer detects black|
 
 ### Non-functional requirements
+- Efficiency: the robot should do actions fast and without error.
+- Response Time: the robot should react to a sensor input within 1 second.
+- Accuracy: The robot should be able to do most actions without any errors or mistakes
 
 ## Design
+### Algoriths
+1. Algorithm 1
+2. Algorithm 2
+3. Algorithm 3
 
 ## Development and Integration
 
