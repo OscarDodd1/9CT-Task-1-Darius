@@ -7,14 +7,40 @@ from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
-
-# This program requires LEGO EV3 MicroPython v2.0 or higher.
-# Click "Open user guide" on the EV3 extension tab for more information.
-
-
-# Create your objects here.
+sensor_motor = Motor(Port.A)
+colour_sensor = ColorSensor(Port.S3)
 ev3 = EV3Brick()
+left_motor = Motor(Port.B)
+right_motor = Motor(Port.C)
+robot = DriveBase(left_motor, right_motor, wheel_diameter=55.5, axle_track=104)
+colour_sensor = ColorSensor(Port.S3)
+ultrasonic_sensor = UltrasonicSensor(Port.S2)
 
+#sensor_motor.run_angle(90, 90)
+#sensor_motor.run_angle(90, -90)
 
-# Write your program here.
-ev3.speaker.beep()
+#if colour_sensor.color() == Color.RED or Color.YELLOW:
+    #pick up here
+    #ev3.speaker.beep()
+
+#else:
+    #move back here and turn 90 degrees
+    #ev3.speaker.beep()
+    #wait(2000)
+    #ev3.speaker.beep()
+    #ev3.speaker.beep(2000)
+
+#while True:
+    #robot.drive(200, 0)
+
+    #while ultrasonic_sensor.distance() > 30:
+        #wait(10)
+
+    #robot.straight(-300)
+    #robot.turn(120)
+
+while True:
+    current_color = colour_sensor.color()
+
+    ev3.screen.print(current_color)
+    wait(1)
