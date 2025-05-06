@@ -44,3 +44,4 @@ while True:
 
     ev3.screen.print(current_color)
     wait(1)
+    ev3.screen.clear()
