@@ -20,29 +20,6 @@ ultrasonic_sensor = UltrasonicSensor(Port.S2)
 detect_distance = 150 #150mm
 check_block_distance = 5 #5mm
 
-#sensor_motor.run_angle(90, 90)
-#sensor_motor.run_angle(90, -90)
-
-#if colour_sensor.color() == Color.RED or Color.YELLOW:
-    #pick up here
-    #ev3.speaker.beep()
-
-#else:
-    #move back here and turn 90 degrees
-    #ev3.speaker.beep()
-    #wait(2000)
-    #ev3.speaker.beep()
-    #ev3.speaker.beep(2000)
-
-#while True:
-    #robot.drive(200, 0)
-
-    #while ultrasonic_sensor.distance() > 30:
-        #wait(10)
-
-    #robot.straight(-300)
-    #robot.turn(120)
-
 #Start
 
 #block finding and moving
@@ -60,22 +37,25 @@ while True:
         robot.turn(3)
         ev3.screen.clear()
 
-    #go to block
-    while ultrasonic_sensor.distance() > check_block_distance:
-        ev3.screen.print(ultrasonic_sensor.distance())
-        robot.straight(5) #move forward 5mm
-        ev3.screen.clear()
+    if found_block:
+        #go to block
+        found_block = False
+        while ultrasonic_sensor.distance() > check_block_distance:
+            ev3.screen.print(ultrasonic_sensor.distance())
+            robot.straight(5) #move forward 5mm
+            ev3.screen.clear()
     
-    #check block colour
-    current_color = colour_sensor.color()
-    ev3.screen.print(current_color)
-
-    if current_color == Color.RED or Color.YELLOW:
-        ev3.screen.print("Good block found")
+        #check block colour
+        current_color = colour_sensor.color()
         ev3.screen.print(current_color)
-        ev3.screen.clear()
-        #take block back to the start
 
+        if current_color == Color.RED or Color.YELLOW:
+            ev3.screen.print("Good block found")
+            ev3.screen.print(current_color)
+            ev3.screen.clear()
+            #take block back to the start\
+
+    wait(10)
     ev3.screen.clear()
 
 #end
