@@ -26,7 +26,7 @@ yellow_block = False
 #Start
 
 #block finding and moving
-while True:
+while red_block == False or yellow_block == False:
     #finding block
     counter = 60
     found_block = False
@@ -55,27 +55,40 @@ while True:
     wait(30)
 
     #check block colour
-    while True:
+    colour_part = True
+    while colour_part == True:
         ev3.screen.print("Checking block colour")
         current_color = colour_sensor.color()
         ev3.screen.print(current_color)
 
-        wait(5)
-
-        if current_color == Color.RED or Color.YELLOW:
-            ev3.screen.print("Good block found")
+        if current_color == Color.NONE:
+            ev3.screen.print("No colour")
+            wait(1)
             ev3.screen.print(current_color)
-            ev3.screen.clear()
-            #take block back to the start\
-            wait(30)
-            while True:
-                ev3.screen.print("Taking " + current_color + " block back")
-                wait(50)
-                ev3.screen.clear()
         else:
-            ev3.screen.print("Bad block found")
-            ev3.screen.print(current_color)
-            ev3.screen.clear()
+            wait(5)
+
+            if current_color == Color.RED or Color.YELLOW:
+                ev3.screen.print("Good block found")
+                ev3.screen.print(current_color)
+                ev3.screen.clear()
+                #take block back to the start
+                wait(30)
+                
+                taking_block_back = True
+            else:
+                ev3.screen.print("Bad block found")
+                ev3.screen.print(current_color)
+                ev3.screen.clear()
+                taking_block_back = False
+                #avoidance code -------- not implemented
+            
+            while taking_block_back == True:
+                    ev3.screen.print("Taking " + current_color + " block back")
+                    wait(50)
+                    #taking block back code ------------- not implemented
+                    ev3.screen.clear()
+                    taking_block_back = False
 
         ev3.screen.clear()
 
