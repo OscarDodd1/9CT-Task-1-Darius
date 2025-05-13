@@ -43,6 +43,8 @@ while True:
             ev3.screen.print("Block found")
             break
 
+    wait(30)
+
     #go to block
     while ultrasonic_sensor.distance() > check_block_distance:
         ev3.screen.print("Going to block")
@@ -50,20 +52,25 @@ while True:
         robot.straight(2.5) #move forward 5mm
         ev3.screen.clear()
     
+    wait(30)
+
     #check block colour
     while True:
         ev3.screen.print("Checking block colour")
         current_color = colour_sensor.color()
         ev3.screen.print(current_color)
 
+        wait(5)
+
         if current_color == Color.RED or Color.YELLOW:
             ev3.screen.print("Good block found")
             ev3.screen.print(current_color)
             ev3.screen.clear()
             #take block back to the start\
+            wait(30)
             while True:
                 ev3.screen.print("Taking " + current_color + " block back")
-                wait(10)
+                wait(50)
                 ev3.screen.clear()
         else:
             ev3.screen.print("Bad block found")
@@ -72,7 +79,7 @@ while True:
 
         ev3.screen.clear()
 
-    wait(10)
+    wait(50)
     ev3.screen.clear()
 
 #end
