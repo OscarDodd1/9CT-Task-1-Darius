@@ -22,11 +22,12 @@ check_block_distance = 80 #5mm
 #variables
 red_block = False
 yellow_block = False
+collected_all_blocks = False
 
 #Start
 
 #block finding and moving
-while red_block == False or yellow_block == False:
+while collected_all_blocks == False:
     #finding block
     counter = 60
     found_block = False
