@@ -13,88 +13,87 @@ ev3 = EV3Brick()
 left_motor = Motor(Port.B)
 right_motor = Motor(Port.C)
 robot = DriveBase(left_motor, right_motor, wheel_diameter=55.5, axle_track=104)
+colour_sensor = ColorSensor(Port.S3)
 ultrasonic_sensor = UltrasonicSensor(Port.S2)
+BLACK = 9
+WHITE = 85
+threshold = (BLACK + WHITE) / 2
+block_grabbed = False
+block_found = False
+detect_distance = 500
+check_block_distance = 80
+current_color = colour_sensor.color()
+block_counter = 0
 
-#Settings
-detect_distance = 300 #150mm
-check_block_distance = 80 #5mm
-
-#variables
-red_block = False
-yellow_block = False
-collected_all_blocks = False
-
-#Start
-
-#block finding and moving
-while collected_all_blocks == False:
-    #finding block
-    counter = 60
-    found_block = False
-    while counter > 0 and found_block == False:
-        ev3.screen.print("Finding block")
-        ev3.screen.print(counter)
-
-        counter -= 1
-        robot.turn(3)
-        ev3.screen.clear()
-
-        if ultrasonic_sensor.distance() < detect_distance:
-            found_block = True
-            ev3.screen.print("Block found")
-            break
-
-    wait(30)
-
-    #go to block
-    while ultrasonic_sensor.distance() > check_block_distance:
-        ev3.screen.print("Going to block")
-        ev3.screen.print(ultrasonic_sensor.distance())
-        robot.straight(2.5) #move forward 5mm
-        ev3.screen.clear()
+def block_search():
+   global block_found
+   if block_grabbed == False and block_found == False:
+       while block_found == False:
+          counter1 = 30
+          counter2 = 60
+          while counter1 > 0:
+            counter1 -= 1
+            robot.turn(3)
+            ev3.screen.print(ultrasonic_sensor.distance())
+            if ultrasonic_sensor.distance() < detect_distance:
+               block_found = True
+               break
+          while counter2 > 0:
+            counter2 -= 1
+            robot.turn(-3)
+            ev3.screen.print(ultrasonic_sensor.distance())
+            if ultrasonic_sensor.distance() < detect_distance:
+               block_found = True
+               break
     
-    wait(30)
+          robot.turn(30)
+          robot.straight(10)
 
-    #check block colour
-    colour_part = True
-    while colour_part == True:
-        ev3.screen.print("Checking block colour")
-        current_color = colour_sensor.color()
+
+def block_check():
+    global block_grabbed
+    global block_found
+    if block_found == True and block_grabbed == False:
+        while ultrasonic_sensor.distance() > check_block_distance:
+           robot.straight(2.5)
+    if current_color == Color.RED or Color.YELLOW:
+        wait(30)
+        robot.straight(2.5)
+        sensor_motor.run_angle (90,90)
+        block_found = False
+        block_grabbed = True
+    else:
+        ev3.screen.print("Bad block found")
         ev3.screen.print(current_color)
-
-        if current_color == Color.NONE:
-            ev3.screen.print("No colour")
-            wait(1)
-            ev3.screen.print(current_color)
-        else:
-            wait(5)
-
-            if current_color == Color.RED or Color.YELLOW:
-                ev3.screen.print("Good block found")
-                ev3.screen.print(current_color)
-                ev3.screen.clear()
-                #take block back to the start
-                wait(30)
-                
-                taking_block_back = True
-            else:
-                ev3.screen.print("Bad block found")
-                ev3.screen.print(current_color)
-                ev3.screen.clear()
-                taking_block_back = False
-                #avoidance code -------- not implemented
-            
-            while taking_block_back == True:
-                    ev3.screen.print("Taking " + current_color + " block back")
-                    wait(50)
-                    #taking block back code ------------- not implemented
-                    ev3.screen.clear()
-                    taking_block_back = False
-
         ev3.screen.clear()
+        robot.straight(-10)
+        robot.turn(-90)
+        robot.straight(10)
+        robot.turn(90)
+        robot.straight(20)
+        robot.turn(10)
+        robot.straight(10)
+        robot.turn(-90)
+        sensor_motor.run_angle (90,90)
+        block_found = False
+def block_return():
+  global block_grabbed 
+  colour_sensor_reflection = colour_sensor.reflection()
+  while colour_sensor_reflection > 60:
+    deviation = colour_sensor.reflection() - threshold
+    turn_rate = 1.2 * deviation
+    robot.drive(10, turn_rate)
+    wait(10)
+    colour_sensor_reflection = colour_sensor_reflection()
+  robot.straight(-10)
+  robot.turn(90)
+  block_grabbed = False
+  block_counter =+ 1
 
-    wait(50)
-    ev3.screen.clear()
-
-#end
-ev3.screen.print("Finished")
+# Main Loop
+while True:
+    block_search()
+    block_check()
+    block_return()
+    if block_counter == 2:
+       break
